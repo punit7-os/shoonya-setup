@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+  Running Dashboard 
+{% endblock title %}
+
+
+
+{% block body %}
+  
+   Welcome To Runner
+
+
+   <h1>Script Output</h1>
+   <pre>{{ console_output }}</pre>
+<!-- 
+   {% if script_error %}
+       <h2>Errors:</h2>
+       <pre>{{ script_error }}</pre>
+   {% endif %} -->
+{% endblock body %}
+   
+   
