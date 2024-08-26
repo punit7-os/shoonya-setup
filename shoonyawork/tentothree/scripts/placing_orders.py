@@ -29,39 +29,112 @@ a = api.get_limits()
 
 # print('''Cash is:''',a["cash"],"Rupees")
 import time
-from datetime import datetime
+import datetime
+from datetime import datetime as dt
 import pytz
 
 # Define IST timezone
 ist = pytz.timezone('Asia/Kolkata')
-_current_time = datetime.now(ist).strftime('%H:%M:%S')
-
-print(_current_time)
 
 # Market times in IST
-buy_time = '09:16:00'  # Buy time in IST
-sell_time = '12:00:00'  # Sell time in IST
+buy_time = '23:37:50'  # Buy time in IST
+sell_time = '14:59:00'  # Sell time in IST
+
+# Initialize variables to store order numbers
+buy_order_number = None
+stop_loss_order_number = None
+sell_order_number = None
 
 while True:
     # Get the current time in IST and format it as HH:MM:SS
-    current_time = datetime.now(ist).strftime('%H:%M:%S')
+    current_time = dt.now(ist).strftime('%H:%M:%S')
+    print(f"Current time: {current_time}")
 
     if current_time == buy_time:
-        ret = api.place_order(buy_or_sell='B', product_type='I',
-                              exchange='NSE', tradingsymbol='IDFC-EQ',
-                              quantity=15, discloseqty=0, price_type='MKT', price=0, trigger_price=None,
-                              retention='DAY', remarks='my_order_001')
-        ret
-        print("Buy order is placed at " + current_time)
+        # Set the start time as the beginning of the day
+        last_bus_day = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
+        starttime = last_bus_day.timestamp()
+        
+        # Retrieve the latest price series data using token 1476
+        try:
+            ret = api.get_time_price_series(exchange='NSE', token='1476', starttime=starttime, interval=5)
+            print(f"API Response: {ret}")  # Print the full response for debugging
+            
+            if ret and len(ret) > 0 and 'price' in ret[-1]:
+                # Get the current market price from the latest data point
+                current_market_price = ret[-1]['price']
+                
+                # Calculate stop-loss as 1% below the current market price
+                stop_loss_price = round(current_market_price * 0.99, 2)
+                
+                # Set trigger price as 0.10 greater than the stop-loss price
+                trigger_price = round(stop_loss_price + 0.10, 2)
+
+                # Place the buy order with quantity set to 5
+                ret_buy = api.place_order(buy_or_sell='B', product_type='I',
+                                          exchange='NSE', tradingsymbol='IDFC-EQ',
+                                          quantity=5, discloseqty=0, price_type='MKT', price=0, trigger_price=None,
+                                          retention='DAY', remarks='my_order_001')
+                
+                if ret_buy['stat'] == 'Ok':  # Check if the buy order was successfully placed
+                    buy_order_number = ret_buy['norenordno']
+                    print(f"Buy order is placed at {current_time} with market price {current_market_price}")
+
+                    # Place the stop-loss order with quantity set to 5
+                    ret_sl = api.place_order(buy_or_sell='S', product_type='C',
+                                             exchange='NSE', tradingsymbol='IDFC-EQ',
+                                             quantity=5, discloseqty=0, price_type='SL-LMT', price=stop_loss_price, 
+                                             trigger_price=trigger_price,
+                                             retention='DAY', remarks='my_stoploss_order_001')
+                    if ret_sl['stat'] == 'Ok':
+                        stop_loss_order_number = ret_sl['norenordno']
+                        print(f"Stop-loss order is placed with stop-loss price {stop_loss_price} and trigger price {trigger_price}")
+                    else:
+                        print(f"Stop-loss order failed: {ret_sl.get('emsg', 'Unknown error')}.")
+                else:
+                    print(f"Buy order failed: {ret_buy.get('emsg', 'Unknown error')}. Stop-loss order not placed.")
+            else:
+                print("No valid price data found or 'price' key is missing.")
+        
+        except Exception as e:
+            print(f"An error occurred while retrieving price data: {e}")
 
     if current_time == sell_time:
-        ret = api.place_order(buy_or_sell='S', product_type='I',
-                              exchange='NSE', tradingsymbol='IDFC-EQ',
-                              quantity=15, discloseqty=0, price_type='MKT', price=0, trigger_price=None,
-                              retention='DAY', remarks='my_order_001')
-        ret
-        print("Sell order is also placed at " + current_time)
+        # Place the sell order with quantity set to 5
+        ret_sell = api.place_order(buy_or_sell='S', product_type='I',
+                                   exchange='NSE', tradingsymbol='IDFC-EQ',
+                                   quantity=5, discloseqty=0, price_type='MKT', price=0, trigger_price=None,
+                                   retention='DAY', remarks='my_order_001')
+        if ret_sell['stat'] == 'Ok':
+            sell_order_number = ret_sell['norenordno']
+            print("Sell order is also placed at " + current_time)
+
+            # Cancel the stop-loss order if it exists
+            if stop_loss_order_number:
+                ret_cancel_sl = api.cancel_order(orderno=stop_loss_order_number)
+                if ret_cancel_sl['stat'] == 'Ok':
+                    print(f"Stop-loss order with number {stop_loss_order_number} is canceled.")
+                else:
+                    print(f"Failed to cancel stop-loss order: {ret_cancel_sl.get('emsg', 'Unknown error')}.")
+        else:
+            print(f"Sell order failed: {ret_sell.get('emsg', 'Unknown error')}.")
+
         break
 
-    time.sleep(1)
+    # Check if the stop-loss order has executed
+    if stop_loss_order_number:
+        # (Placeholder) Implement logic to check if stop-loss order has executed
+        # For demonstration, you would normally check the status of the stop-loss order here
+        stop_loss_executed = True  # Replace with actual check
 
+        if stop_loss_executed:
+            # Cancel the sell order if it exists
+            if sell_order_number:
+                ret_cancel_sell = api.cancel_order(orderno=sell_order_number)
+                if ret_cancel_sell['stat'] == 'Ok':
+                    print(f"Sell order with number {sell_order_number} is canceled.")
+                else:
+                    print(f"Failed to cancel sell order: {ret_cancel_sell.get('emsg', 'Unknown error')}.")
+            break
+
+    time.sleep(1)
