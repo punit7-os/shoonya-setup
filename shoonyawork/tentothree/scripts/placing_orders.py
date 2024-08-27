@@ -37,8 +37,8 @@ import pytz
 ist = pytz.timezone('Asia/Kolkata')
 
 # Market times in IST
-buy_time = '23:37:50'  # Buy time in IST
-sell_time = '14:59:00'  # Sell time in IST
+buy_time = '09:20:00'  # Buy time in IST
+sell_time = '12:00:00'  # Sell time in IST
 
 # Initialize variables to store order numbers
 buy_order_number = None
@@ -72,7 +72,7 @@ while True:
 
                 # Place the buy order with quantity set to 5
                 ret_buy = api.place_order(buy_or_sell='B', product_type='I',
-                                          exchange='NSE', tradingsymbol='IDFC-EQ',
+                                          exchange='NSE', tradingsymbol='IDBI-EQ',
                                           quantity=5, discloseqty=0, price_type='MKT', price=0, trigger_price=None,
                                           retention='DAY', remarks='my_order_001')
                 
@@ -82,7 +82,7 @@ while True:
 
                     # Place the stop-loss order with quantity set to 5
                     ret_sl = api.place_order(buy_or_sell='S', product_type='C',
-                                             exchange='NSE', tradingsymbol='IDFC-EQ',
+                                             exchange='NSE', tradingsymbol='IDBI-EQ',
                                              quantity=5, discloseqty=0, price_type='SL-LMT', price=stop_loss_price, 
                                              trigger_price=trigger_price,
                                              retention='DAY', remarks='my_stoploss_order_001')
@@ -102,7 +102,7 @@ while True:
     if current_time == sell_time:
         # Place the sell order with quantity set to 5
         ret_sell = api.place_order(buy_or_sell='S', product_type='I',
-                                   exchange='NSE', tradingsymbol='IDFC-EQ',
+                                   exchange='NSE', tradingsymbol='IDBI-EQ',
                                    quantity=5, discloseqty=0, price_type='MKT', price=0, trigger_price=None,
                                    retention='DAY', remarks='my_order_001')
         if ret_sell['stat'] == 'Ok':

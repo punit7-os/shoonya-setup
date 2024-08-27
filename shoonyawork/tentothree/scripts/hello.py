@@ -36,21 +36,30 @@ import time
 
 #
 
-ret = api.get_daily_price_series(exchange="NSE",tradingsymbol="IDBI-EQ",startdate="1716369273",enddate="1718939673")
+# ret = api.get_daily_price_series(exchange="NSE",tradingsymbol="IDBI-EQ",startdate="1716369273",enddate="1718939673")
 
 # ret
-pd.DataFrame(ret)
-ret
-# y
+# # pd.DataFrame(ret)
+# ret
+# # y
 
 
-
+from datetime import datetime as dt
 ## for all columns access
-parsed_data = [json.loads(item) for item in ret]
+# parsed_data = [json.loads(item) for item in ret]
 
 # Convert parsed data to a pandas DataFrame
-df = pd.DataFrame(parsed_data)
+# df = pd.DataFrame(parsed_data)
 
 # Display the DataFrame
-print(df)
+# print(df)
+# last_bus_day = dt.today().replace(hour=0, minute=0, second=0, microsecond=0)
+# starttime = last_bus_day.timestamp()
 
+# rset = api.get_time_price_series(exchange='NSE', token='1476', starttime=starttime, interval=5)
+# parsed_data = [json.loads(item) for item in rset]
+# df = pd.DataFrame(parsed_data)
+
+lastBusDay = datetime.datetime.today()
+lastBusDay = lastBusDay.replace(hour=0, minute=0, second=0, microsecond=0)
+ret = api.get_time_price_series(exchange='NSE', token='22', starttime=lastBusDay.timestamp(), interval=5)
