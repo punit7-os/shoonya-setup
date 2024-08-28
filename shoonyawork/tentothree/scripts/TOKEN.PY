@@ -44,8 +44,8 @@ import pytz
 ist = pytz.timezone('Asia/Kolkata')
 
 # Market times in IST
-buy_time = '12:23:50'  # Buy time in IST
-sell_time = '12:26:00'  # Sell time in IST
+buy_time = '13:30:55'  # Buy time in IST
+sell_time = '13:32:00'  # Sell time in IST
 
 # Initialize variables to store order numbers
 buy_order_number = None
@@ -69,16 +69,13 @@ while True:
             
             if ret and isinstance(ret, list) and len(ret) > 0 and 'into' in ret[-1]:
                 # Get the current market price from the latest data point
-                current_market_price = ret[-1]['into']
-                current_market_price = float(current_market_price)
+                current_market_price = float(ret[-1]['into'])
                 
-                # Calculate stop-loss as 1% below the current market price
-                sl_int = float(0.99)
-                stop_loss_price = round(sl_int * current_market_price  , 2)
+                # Calculate trigger price as 1% below current market price
+                trigger_price = round(0.99 * current_market_price, 2)
                 
-                # Set trigger price as 0.10 greater than the stop-loss price
-                trig_int = float(0.10)
-                trigger_price = round(trig_int +  stop_loss_price, 2)
+                # Calculate stop-loss price as 1.1% below current market price
+                stop_loss_price = round(0.989 * current_market_price, 2)
 
                 # Place the buy order with quantity set to 5
                 ret_buy = api.place_order(buy_or_sell='B', product_type='I',
@@ -98,7 +95,7 @@ while True:
                                              retention='DAY', remarks='my_stoploss_order_001')
                     if ret_sl['stat'] == 'Ok':
                         stop_loss_order_number = ret_sl['norenordno']
-                        print(f"Stop-loss order is placed with stop-loss price {stop_loss_price} and trigger price {trigger_price}")
+                        print(f"Stop-loss order placed with stop-loss price {stop_loss_price} and trigger price {trigger_price}")
                     else:
                         print(f"Stop-loss order failed: {ret_sl.get('emsg', 'Unknown error')}.")
                 else:
@@ -117,7 +114,7 @@ while True:
                                    retention='DAY', remarks='my_order_001')
         if ret_sell['stat'] == 'Ok':
             sell_order_number = ret_sell['norenordno']
-            print("Sell order is also placed at " + current_time)
+            print(f"Sell order is placed at {current_time}")
 
             # Cancel the stop-loss order if it exists
             if stop_loss_order_number:
