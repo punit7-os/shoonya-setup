@@ -15,6 +15,12 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# settings.py
+
+# Set the timezone to Indian Standard Time (IST)
+TIME_ZONE = 'Asia/Kolkata'
+
+USE_TZ = True  # Ensure timezone-aware datetimes are used
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/

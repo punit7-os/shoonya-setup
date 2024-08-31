@@ -44,8 +44,8 @@ import pytz
 ist = pytz.timezone('Asia/Kolkata')
 
 # Market times in IST
-buy_time = '15:11:10'  # Buy time in IST
-sell_time = '15:11:50'  # Sell time in IST
+buy_time = '15:15:10'  # Buy time in IST
+sell_time = '15:15:50'  # Sell time in IST
 
 # Initialize variables to store order numbers
 buy_order_number = None

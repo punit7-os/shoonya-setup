@@ -24,28 +24,11 @@ pre{
 </style>
 {% block body %}
   <div class="container">
-   
-
-
-   <h1 class="text-center">Runner</h1>
-   <p>Last refreshed: <span id="last-refresh"> {{ timestamp }} </span></p>
-<pre id="script-output">{{ console_output }}</pre><br>
-
-
-   <!-- <p class="text-left output_1">{{ console_output }}</p> -->
-   <!-- <h1>DataFrame Data</h1> -->
+    <h1 class="text-center">Runner</h1>
+    <p>Last refreshed: <span id="last-refresh">{{ timestamp }}</span></p>
+    <pre id="script-output">{{ console_output }}</pre><br>
 
     <table border="1">
-        <!-- <thead>
-            <tr>
-                <th>time</th>
-                <th>into</th>
-                <th>inth</th>
-                <th>intc</th>
-                <th>ssboe</th>
-                <th>intv</th>
-            </tr>
-        </thead> -->
         <tbody>
             {% for row in df_records %}
                 <tr>
@@ -55,38 +38,37 @@ pre{
                     <td>{{ row.intc }}</td>
                     <td>{{ row.ssboe }}</td>
                     <td>{{ row.intv }}</td>
-                    
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
   </div>
    
   <script>
-   {% block script %} 
-   // Function to fetch script output using AJAX
-   function fetchScriptOutput() {
-       $.ajax({
-           url: '/tentothree/',  // URL pattern to fetch data from
-           method: 'GET',
-           success: function(data) {
-               // Update the content of the pre tag with the script output
-               $('#script-output').text(data.output);
-           },
-           error: function(xhr, status, error) {
-               console.error("AJAX error:", error);
-           }
-       });
-   }
+    {% block script %}
+    // Function to fetch updated script output using AJAX
+    function fetchScriptOutput() {
+    $.ajax({
+        url: '/tentothree/ajax/',  // URL pattern for AJAX requests
+        method: 'GET',
+        success: function(data) {
+            $('#script-output').text(data.output);
+            $('#last-refresh').text(data.timestamp);
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", error);
+        }
+    });
+}
 
-   // Periodically fetch the script output every 5 seconds (5000 milliseconds)
-   setInterval(fetchScriptOutput, 5000);
+// Periodically fetch the script output every 10 seconds (10000 milliseconds)
+setInterval(fetchScriptOutput, 10000);
 
-   // Initial fetch when the page loads
-   fetchScriptOutput();
-   {% endblock script %}
-</script>
+// Initial fetch when the page loads
+fetchScriptOutput();
+
+    {% endblock script %}
+  </script>
 {% endblock body %}
-   
+
    
