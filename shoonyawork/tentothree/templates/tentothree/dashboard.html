@@ -52,6 +52,20 @@ $(document).ready(function(){
 </style>
 {% endblock head %}
 {% block body %}
+<div class="container mt-5">
+
+    <!-- Display success message if present (Bootstrap alert) -->
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
   <div class="container">
     <h1 class="text-center">Runner</h1>
     <p>Last refreshed: <span id="last-refresh">{{ timestamp }}</span></p>
@@ -74,7 +88,15 @@ $(document).ready(function(){
   </div>
    
   
-
+  <script>
+    setTimeout(function() {
+        let alerts = document.querySelectorAll('.alert-success');
+        alerts.forEach(function(alert) {
+            let alertInstance = new bootstrap.Alert(alert);
+            alertInstance.close();
+        });
+    }, 4000);  // 4000 milliseconds = 4 seconds
+</script>
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 {% endblock body %}
