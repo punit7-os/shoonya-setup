@@ -1,27 +1,56 @@
 {% extends "base.html" %}
 
-
+{% block head %}
+  
+<title>
 {% block title %}
-  Running Dashboard 
-{% endblock title %}
+Running Dashboard
+ {% endblock title %}
+</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Release the $ variable
+    var $jq = jQuery.noConflict();
+
+// Reassign $ to jQuery
+var $ = $jq;
+
+// Use $ for jQuery
+$(document).ready(function(){
+    $.ajax({
+        url: 'https://code.jquery.com/jquery-3.6.0.min.js', // Use a valid URL
+        method: 'GET',
+        success: function(data) {
+            console.log("AJAX call successful", data);
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", error);
+        }
+    });
+});
+</script>
+
+
+ 
 
 <style>
-   {% block style %}
-   
+    {% block style %}
     
-
-.output_1{
-      color:red;
-}
-
-pre{
-    display: block;
-    font-size: 99.5%;
-    color: #212529
-}
-
-{% endblock style %}
+    
+    
+    .output_1{
+        color:red;
+    }
+    
+    pre{
+        display: block;
+        font-size: 99.5%;
+        color: #212529
+    }
+    
+    {% endblock style %}
 </style>
+{% endblock head %}
 {% block body %}
   <div class="container">
     <h1 class="text-center">Runner</h1>
@@ -44,31 +73,10 @@ pre{
     </table>
   </div>
    
-  <script>
-    {% block script %}
-    // Function to fetch updated script output using AJAX
-    function fetchScriptOutput() {
-    $.ajax({
-        url: '/tentothree/ajax/',  // URL pattern for AJAX requests
-        method: 'GET',
-        success: function(data) {
-            $('#script-output').text(data.output);
-            $('#last-refresh').text(data.timestamp);
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX error:", error);
-        }
-    });
-}
+  
 
-// Periodically fetch the script output every 10 seconds (10000 milliseconds)
-setInterval(fetchScriptOutput, 10000);
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
-// Initial fetch when the page loads
-fetchScriptOutput();
-
-    {% endblock script %}
-  </script>
 {% endblock body %}
 
    
