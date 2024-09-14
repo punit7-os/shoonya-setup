@@ -67,3 +67,16 @@ from django.contrib.auth import logout
 def logout_view(request):
     logout(request)
     return redirect('login')  # Redirect to login page after logout
+
+def sign_in_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'You have successfully signed in.')
+            return redirect('home')  # Redirect to the homepage or any other page after sign-in
+        else:
+            messages.error(request, 'Invalid username or password.')
+    return render(request, 'join-in.html')
