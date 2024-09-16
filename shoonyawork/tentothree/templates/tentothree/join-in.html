@@ -1,81 +1,85 @@
 {% extends "base.html" %}
 
-{% block head %}
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-{% endblock head %}
-
-{% block title %}
-Sign In
-{% endblock title %}
-
-{% block style %}
-.login-body {
-    background-color: white;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.login-container {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-}
-{% endblock style %}
+{% block title %}Sign Up{% endblock title %}
 
 {% block body %}
-<div class="login-body">
-    <div class="login-container">
-        <h2>Sign In</h2>
+<div class="container mt-5">
+    <h2>Sign Up</h2>
+    
+    <!-- Display messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
 
-        <!-- Display error and success messages (Bootstrap alert) -->
-        {% if messages %}
-            {% for message in messages %}
-                {% if message.tags == "error" %}
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% elif message.tags == "success" %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                {% endif %}
-            {% endfor %}
+    <!-- Sign-Up Form -->
+    <form method="POST" action="{% url 'sign_up' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="mobile_number" class="form-label">Mobile Number</label>
+            <input type="text" class="form-control" id="mobile_number" name="mobile_number" required>
+        </div>
+        <div class="mb-3">
+            <label for="password1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password1" name="password1" required>
+        </div>
+        <div class="mb-3">
+            <label for="password2" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="password2" name="password2" required>
+        </div>
+        
+        <!-- OTP input, visible only after OTP is sent -->
+        {% if request.session.otp %}
+        <div class="mb-3">
+            <label for="otp" class="form-label">Enter OTP</label>
+            <input type="text" class="form-control" id="otp" name="otp" required>
+        </div>
+        <!-- Countdown and Resend OTP -->
+        <p id="timer">Time remaining: <span id="countdown">28</span> seconds</p>
+        <button type="button" id="resend_otp" class="btn btn-outline-secondary" disabled>Resend OTP</button>
         {% endif %}
-
-        <!-- Sign-In Form -->
-        <form method="POST" action="{% url 'sign_in' %}">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-outline-info">Sign In</button>
-        </form>
-    </div>
+        
+        <button type="submit" class="btn btn-outline-info">Sign Up</button>
+    </form>
 </div>
 {% endblock body %}
 
 {% block script %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Auto-close alert after 5 seconds -->
 <script>
-    setTimeout(function() {
-        let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(function(alert) {
-            let alertInstance = new bootstrap.Alert(alert);
-            alertInstance.close();
-        });
-    }, 5000);  // 5000 milliseconds = 5 seconds
+// Countdown timer for OTP
+let countdownElement = document.getElementById('countdown');
+let resendButton = document.getElementById('resend_otp');
+let countdown = 28;
+
+let countdownInterval = setInterval(function() {
+    if (countdown > 0) {
+        countdown--;
+        countdownElement.textContent = countdown;
+    } else {
+        clearInterval(countdownInterval);
+        resendButton.disabled = false;  // Enable the Resend OTP button
+    }
+}, 1000);
+
+// Resend OTP functionality
+resendButton.addEventListener('click', function() {
+    location.reload();  // Reload the page to trigger OTP resend
+});
 </script>
 {% endblock script %}

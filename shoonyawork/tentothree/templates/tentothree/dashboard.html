@@ -1,59 +1,64 @@
 {% extends "base.html" %}
 
 {% block head %}
-  
 <title>
 {% block title %}
 Running Dashboard
- {% endblock title %}
+{% endblock title %}
 </title>
+
+<!-- jQuery Script -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    // Release the $ variable
+    // Use jQuery noConflict mode to avoid conflicts
     var $jq = jQuery.noConflict();
 
-// Reassign $ to jQuery
-var $ = $jq;
-
-// Use $ for jQuery
-$(document).ready(function(){
-    $.ajax({
-        url: 'https://code.jquery.com/jquery-3.6.0.min.js', // Use a valid URL
-        method: 'GET',
-        success: function(data) {
-            console.log("AJAX call successful", data);
-        },
-        error: function(xhr, status, error) {
-            console.error("AJAX error:", error);
+    $jq(document).ready(function() {
+        function refreshDashboard() {
+            $jq.ajax({
+                url: '',  // This will call the same URL (the current view)
+                type: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'  // Indicate AJAX request
+                },
+                success: function(response) {
+                    // Update the last refresh timestamp and the script output
+                    $jq('#last-refresh').text(response.timestamp);
+                    $jq('#script-output').text(response.output);
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX error:", error);
+                }
+            });
         }
+
+        // Initial load of the dashboard data
+        refreshDashboard();
+
+        // Set interval to refresh every 5 minutes (300000 milliseconds)
+        setInterval(refreshDashboard, 10000);  // 5 minutes
     });
-});
 </script>
-
-
- 
 
 <style>
     {% block style %}
-    
-    
-    
-    .output_1{
-        color:red;
+    .output_1 {
+        color: red;
     }
     
-    pre{
+    pre {
         display: block;
         font-size: 99.5%;
-        color: #212529
+        color: #212529;
     }
-    
     {% endblock style %}
 </style>
+
 {% endblock head %}
+
 {% block body %}
 <div class="container mt-5">
-
     <!-- Display success message if present (Bootstrap alert) -->
     {% if messages %}
         {% for message in messages %}
@@ -66,11 +71,13 @@ $(document).ready(function(){
         {% endfor %}
     {% endif %}
 </div>
-  <div class="container">
+
+<div class="container">
     <h1 class="text-center">Runner</h1>
     <p>Last refreshed: <span id="last-refresh">{{ timestamp }}</span></p>
     <pre id="script-output">{{ console_output }}</pre><br>
 
+    <!-- Table displaying the records -->
     <table border="1">
         <tbody>
             {% for row in df_records %}
@@ -85,10 +92,10 @@ $(document).ready(function(){
             {% endfor %}
         </tbody>
     </table>
-  </div>
-   
-  
-  <script>
+</div>
+
+<!-- Script to close alerts after 4 seconds -->
+<script>
     setTimeout(function() {
         let alerts = document.querySelectorAll('.alert-success');
         alerts.forEach(function(alert) {
@@ -97,8 +104,5 @@ $(document).ready(function(){
         });
     }, 4000);  // 4000 milliseconds = 4 seconds
 </script>
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 {% endblock body %}
-
-   

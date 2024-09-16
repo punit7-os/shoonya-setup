@@ -1,5 +1,4 @@
 
-# new
 import os
 import subprocess
 from django.conf import settings
@@ -22,7 +21,7 @@ def dashboard(request):
     # Get the current time in Indian Standard Time (IST)
     ist = timezone.now().astimezone(pytz.timezone('Asia/Kolkata'))
     
-    # Format the timestamp as hhmmss ddmmyyyy
+    # Format the timestamp as hh:mm:ss dd/mm/yyyy
     timestamp = ist.strftime('%H:%M:%S %d/%m/%Y')
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -36,8 +35,10 @@ def dashboard(request):
     context = {
         'console_output': output,
         'timestamp': timestamp,
+        'df_records': [],  # Ensure this is properly populated if used in the template
     }
     return render(request, 'dashboard.html', context)
+
 
 
 from django.shortcuts import render, redirect
@@ -76,7 +77,7 @@ def sign_in_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'You have successfully signed in.')
-            return redirect('home')  # Redirect to the homepage or any other page after sign-in
+            return redirect('dashboard')  # Redirect to the homepage or any other page after sign-in
         else:
             messages.error(request, 'Invalid username or password.')
     return render(request, 'join-in.html')
