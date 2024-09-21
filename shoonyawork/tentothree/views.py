@@ -77,7 +77,11 @@ def sign_in_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'You have successfully signed in.')
+#<<<<<<< HEAD
             return redirect('dashboard')  # Redirect to the homepage or any other page after sign-in
+#======
+            return redirect('home')  # Redirect to the homepage or any other page after sign-in
+#>>>>>>> 542e760792ecaecdfe03d7d6e918b14b9804bfaf
         else:
             messages.error(request, 'Invalid username or password.')
     return render(request, 'join-in.html')

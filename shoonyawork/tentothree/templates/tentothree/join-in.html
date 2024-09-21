@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+<<<<<<< HEAD
 {% block title %}Sign Up{% endblock title %}
 
 {% block body %}
@@ -57,10 +58,75 @@
         
         <button type="submit" class="btn btn-outline-info">Sign Up</button>
     </form>
+=======
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock head %}
+
+{% block title %}
+Sign In
+{% endblock title %}
+
+{% block style %}
+.login-body {
+    background-color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.login-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+{% endblock style %}
+
+{% block body %}
+<div class="login-body">
+    <div class="login-container">
+        <h2>Sign In</h2>
+
+        <!-- Display error and success messages (Bootstrap alert) -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "error" %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% elif message.tags == "success" %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <!-- Sign-In Form -->
+        <form method="POST" action="{% url 'sign_in' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-outline-info">Sign In</button>
+        </form>
+    </div>
+>>>>>>> 542e760792ecaecdfe03d7d6e918b14b9804bfaf
 </div>
 {% endblock body %}
 
 {% block script %}
+<<<<<<< HEAD
 <script>
 // Countdown timer for OTP
 let countdownElement = document.getElementById('countdown');
@@ -81,5 +147,18 @@ let countdownInterval = setInterval(function() {
 resendButton.addEventListener('click', function() {
     location.reload();  // Reload the page to trigger OTP resend
 });
+=======
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Auto-close alert after 5 seconds -->
+<script>
+    setTimeout(function() {
+        let alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            let alertInstance = new bootstrap.Alert(alert);
+            alertInstance.close();
+        });
+    }, 5000);  // 5000 milliseconds = 5 seconds
+>>>>>>> 542e760792ecaecdfe03d7d6e918b14b9804bfaf
 </script>
 {% endblock script %}
