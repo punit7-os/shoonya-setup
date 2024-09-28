@@ -44,8 +44,8 @@ import pytz
 ist = pytz.timezone('Asia/Kolkata')
 
 # Market times in IST
-buy_time = '15:15:10'  # Buy time in IST
-sell_time = '15:15:50'  # Sell time in IST
+buy_time = '09:20:00'  # Buy time in IST
+sell_time = '12:00:00'  # Sell time in IST
 
 # Initialize variables to store order numbers
 buy_order_number = None
@@ -74,7 +74,7 @@ while True:
                 current_market_price = float(current_market_price)
                 
                 # Calculate stop-loss as 1% below the current market price
-                sl_int = float(0.99)
+                sl_int = float(0.989)
                 stop_loss_price = round(sl_int * current_market_price, 2)
                 
                 # Set trigger price as 0.10 greater than the stop-loss price

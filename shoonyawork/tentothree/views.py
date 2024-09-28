@@ -9,7 +9,7 @@ import pytz
 
 def dashboard(request):
     # Construct the script path
-    script_path = os.path.join(settings.BASE_DIR, 'tentothree', 'scripts', 'hello.py')
+    script_path = os.path.join(settings.BASE_DIR, 'tentothree', 'scripts', 'placing_orders.py')
 
     try:
         # Run the script and capture the output
@@ -81,7 +81,8 @@ def sign_in_view(request):
             return redirect('dashboard')  # Redirect to the homepage or any other page after sign-in
 #======
             return redirect('home')  # Redirect to the homepage or any other page after sign-in
-#>>>>>>> 542e760792ecaecdfe03d7d6e918b14b9804bfaf
+#>>>>>>> 542e760792
+# ecaecdfe03d7d6e918b14b9804bfaf
         else:
             messages.error(request, 'Invalid username or password.')
     return render(request, 'join-in.html')
