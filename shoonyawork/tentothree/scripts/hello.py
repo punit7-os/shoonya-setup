@@ -2,7 +2,7 @@ from NorenRestApiPy.NorenApi import  NorenApi
 import pandas as pd
 import logging 
 import pyotp
-import json
+# import json
 
 #enable dbug to see request and responses
 logging.basicConfig(level=logging.DEBUG)
@@ -16,7 +16,7 @@ api = ShoonyaApiPy()
 token = '42N7D5SX4M7TDL2ODQ5B5TU7XN65PJ77'
 otp = pyotp.TOTP(token).now()     
 user    = 'FA155856'
-pwd     = 'Fin@01Fin'
+pwd     = 'Sho07Fin@01'
 factor2 = otp
 vc      = 'FA155856_U'
 app_key = '172af09764b8507292751366d3edc828'
