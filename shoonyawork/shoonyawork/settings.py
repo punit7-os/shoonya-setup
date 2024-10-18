@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 ]
 
 ROOT_URLCONF = 'shoonyawork.urls'
@@ -78,6 +79,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shoonyawork.wsgi.application'
 
+# Add this to settings.py
+CSRF_FAILURE_VIEW = 'tentothree.views.csrf_failure'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases

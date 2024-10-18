@@ -6,6 +6,7 @@
 
 {% block title %}
 Sign In
+
 {% endblock title %}
 
 {% block style %}
@@ -49,8 +50,10 @@ Sign In
         {% endif %}
 
         <!-- Sign-In Form -->
-        <form method="POST" action="{% url 'sign_in' %}">
+        <form method="POST" action="{% url 'dashboard' %}">
             {% csrf_token %}
+            <!-- <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> -->
+
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" class="form-control" id="username" name="username" required>

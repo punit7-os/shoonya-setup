@@ -1,31 +1,20 @@
 {% extends "base.html" %}
 
 {% block head %}
-<title>
 
-
-Running Dashboard
-
-
-</title>
-
-<!-- jQuery Script -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-    // Use jQuery noConflict mode to avoid conflicts
     var $jq = jQuery.noConflict();
-
     $jq(document).ready(function() {
         function refreshDashboard() {
             $jq.ajax({
-                url: '',  // This will call the same URL (the current view)
+                url: '/tentothree/dashboard',  // Current view URL
                 type: 'GET',
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'  // Indicate AJAX request
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': $jq('input[name="csrfmiddlewaretoken"]').val()
                 },
                 success: function(response) {
-                    // Update the last refresh timestamp and the script output
                     $jq('#last-refresh').text(response.timestamp);
                     $jq('#script-output').text(response.output);
                 },
@@ -35,33 +24,21 @@ Running Dashboard
             });
         }
 
-        // Initial load of the dashboard data
         refreshDashboard();
-
-        // Set interval to refresh every 5 minutes (300000 milliseconds)
-        setInterval(refreshDashboard, 10000);  // 5 minutes
+        setInterval(refreshDashboard, 10000);
     });
 </script>
-
-<style>
-    {% block style %}
-    .output_1 {
-        color: red;
-    }
-    
-    pre {
-        display: block;
-        font-size: 99.5%;
-        color: #212529;
-    }
-    {% endblock style %}
-</style>
 
 {% endblock head %}
 
 {% block body %}
+{% csrf_token %}
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
 <div class="container mt-5">
-    <!-- Display success message if present (Bootstrap alert) -->
+    {% if reason %}
+        <p>Error: {{ reason }}</p>
+    {% endif %}
     {% if messages %}
         {% for message in messages %}
             {% if message.tags == "success" %}
@@ -78,9 +55,7 @@ Running Dashboard
     <h1 class="text-center">Runner</h1>
     <p>Last refreshed: <span id="last-refresh">{{ timestamp }}</span></p>
     <pre id="script-output">{{ console_output }}</pre><br>
-
-    <!-- Table displaying the records -->
-    <table border="1">
+    <!-- <table border="1">
         <tbody>
             {% for row in df_records %}
                 <tr>
@@ -93,10 +68,9 @@ Running Dashboard
                 </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table> -->
 </div>
 
-<!-- Script to close alerts after 4 seconds -->
 <script>
     setTimeout(function() {
         let alerts = document.querySelectorAll('.alert-success');
@@ -104,7 +78,7 @@ Running Dashboard
             let alertInstance = new bootstrap.Alert(alert);
             alertInstance.close();
         });
-    }, 4000);  // 4000 milliseconds = 4 seconds
+    }, 4000);
 </script>
 
 {% endblock body %}

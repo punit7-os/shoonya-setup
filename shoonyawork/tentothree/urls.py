@@ -6,7 +6,7 @@ urlpatterns = [
     path("", views.login_view, name="login"),
     path("dashboard", views.dashboard, name="dashboard"),
     path('logout/', views.logout_view, name='logout'),
-    path('sign-in/', views.sign_in_view, name='sign_in'), 
+    # path('sign-in/', views.sign_in_view, name='sign-in'), 
     # path('process_command/', process_command, name='process_command'),
     # path("tentothree/ajax/", views.tentothree_ajax_view, name="tentothree_ajax"), 
 ]

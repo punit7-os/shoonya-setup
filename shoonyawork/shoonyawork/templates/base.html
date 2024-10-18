@@ -6,16 +6,18 @@
     {% block head %}
   
 {% endblock head %}
+<title>
+{% block title %}
+  
+{% endblock title %}
+
+</title>
+
         {% block script %}
         
         {% endblock script %}
 
-    <title>
-        {% block title %}
-      
-    {% endblock title %}
-
-</title>
+  
     <style>
     {% block style %}
       
@@ -27,6 +29,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    {% csrf_token %}
 
     <!-- Bootstrap Navs Component -->
     <nav class="navbar navbar-expand-lg navbar-light bg-Dark">

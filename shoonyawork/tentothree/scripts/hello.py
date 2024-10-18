@@ -27,12 +27,12 @@ ret = api.login(userid=user, password=pwd, twoFA=otp, vendor_code=vc, api_secret
 a = api.get_limits()
 
 
-print('''Cash is:''',a["cash"],"Rupees")
+print( '''Cash is:''',a["cash"],"Rupees")
 
 
-import datetime
-import pandas as pd
-import time
+# import datetime
+# import pandas as pd
+# import time
 
 #
 
@@ -67,6 +67,6 @@ from datetime import datetime as dt
 # parsed_data = [json.loads(item) for item in rset]
 # df = pd.DataFrame(parsed_data)
 
-lastBusDay = datetime.datetime.today()
-lastBusDay = lastBusDay.replace(hour=0, minute=0, second=0, microsecond=0)
-ret = api.get_time_price_series(exchange='NSE', token='22', starttime=lastBusDay.timestamp(), interval=5)
+# lastBusDay = datetime.datetime.today()
+# lastBusDay = lastBusDay.replace(hour=0, minute=0, second=0, microsecond=0)
+# ret = api.get_time_price_series(exchange='NSE', token='22', starttime=lastBusDay.timestamp(), interval=5)
